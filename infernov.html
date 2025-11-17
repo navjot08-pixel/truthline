@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthLine - Decentralized News Verification Portal</title>
+    <meta name="description" content="Verify news credibility with AI-powered analysis and community verification. Upload text, images, or videos for instant fact-checking.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e'
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            900: '#0f172a'
+                        },
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .trust-score-gradient {
+            background: linear-gradient(135deg, #10b981, #0ea5e9);
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold text-secondary-900">TruthLine</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-secondary-700 hover:text-primary-500 transition-colors font-medium">Home</a>
+                    <a href="#verify" class="text-secondary-700 hover:text-primary-500 transition-colors font-medium">Verify</a>
+                    <a href="#trending" class="text-secondary-700 hover:text-primary-500 transition-colors font-medium">Trending</a>
+                    <a href="#community" class="text-secondary-700 hover:text-primary-500 transition-colors font-medium">Community</a>
+                    <a href="#leaderboard" class="text-secondary-700 hover:text-primary-500 transition-colors font-medium">Leaderboard</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition-colors font-medium">
+                        Report Fake News
+                    </button>
+                    <button class="md:hidden text-secondary-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 animate-float">
+                Trust in Truth
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-90 max-w-2xl mx-auto">
+                Decentralized news verification powered by AI and community wisdom
+            </p>
+            
+            <!-- Main Verification Box -->
+            <div class="glass-effect rounded-2xl p-8 max-w-4xl mx-auto mt-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Text/Link Input -->
+                    <div class="bg-white rounded-xl p-6 text-secondary-900 hover:shadow-lg transition-shadow cursor-pointer group">
+                        <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+                            <i class="fas fa-paste text-primary-500 text-xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg mb-2">Paste Text/Link</h3>
+                        <p class="text-secondary-600 text-sm">Verify articles, social media posts, or news URLs</p>
+                    </div>
+                    
+                    <!-- Image Upload -->
+                    <div class="bg-white rounded-xl p-6 text-secondary-900 hover:shadow-lg transition-shadow cursor-pointer group">
+                        <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+                            <i class="fas fa-image text-primary-500 text-xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg mb-2">Upload Image</h3>
+                        <p class="text-secondary-600 text-sm">Check screenshots, memes, or edited images</p>
+                    </div>
+                    
+                    <!-- Video Upload -->
+                    <div class="bg-white rounded-xl p-6 text-secondary-900 hover:shadow-lg transition-shadow cursor-pointer group">
+                        <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-200 transition-colors">
+                            <i class="fas fa-video text-primary-500 text-xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg mb-2">Upload Video</h3>
+                        <p class="text-secondary-600 text-sm">Analyze short videos and clips for authenticity</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Verification Panel -->
+    <section id="verify" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+                    Verify Any Content
+                </h2>
+                <p class="text-secondary-600 text-lg max-w-2xl mx-auto">
+                    Our AI analyzes multiple dimensions of credibility and combines them with community verification
+                </p>
+            </div>
+
+            <!-- Input Methods -->
+            <div class="max-w-4xl mx-auto mb-16">
+                <div class="bg-secondary-50 rounded-2xl p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-link text-white text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-secondary-900 mb-2">Text/Link</h3>
+                            <textarea 
+                                class="w-full h-32 p-4 border border-secondary-300 rounded-lg resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                placeholder="Paste news text or URL here..."
+                            ></textarea>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-camera text-white text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-secondary-900 mb-2">Image Upload</h3>
+                            <div class="border-2 border-dashed border-secondary-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary-500 transition-colors">
+                                <i class="fas fa-cloud-upload-alt text-secondary-400 text-2xl mb-2"></i>
+                                <p class="text-secondary-600">Drop image or click to upload</p>
+                                <input type="file" class="hidden" accept="image/*">
+                            </div>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-film text-white text-xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-secondary-900 mb-2">Video Upload</h3>
+                            <div class="border-2 border-dashed border-secondary-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary-500 transition-colors">
+                                <i class="fas fa-cloud-upload-alt text-secondary-400 text-2xl mb-2"></i>
+                                <p class="text-secondary-600">Drop video or click to upload</p>
+                                <input type="file" class="hidden" accept="video/*">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-primary-500 text-white py-4 rounded-lg hover:bg-primary-600 transition-colors font-semibold text-lg">
+                        <i class="fas fa-search mr-2"></i>
+                        Verify Content
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="max-w-6xl mx-auto">
+                <h3 class="text-2xl font-bold text-secondary-900 mb-8 text-center">Verification Results</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- AI Analysis -->
+                    <div class="bg-secondary-50 rounded-2xl p-8">
+                        <h4 class="text-xl font-semibold text-secondary-900 mb-6 flex items-center">
+                            <i class="fas fa-robot text-primary-500 mr-3"></i>
+                            AI Analysis
+                        </h4>
+                        
+                        <div class="space-y-6">
+                            <!-- Credibility Score -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium text-secondary-700">Credibility Score</span>
+                                    <span class="font-bold text-success">85%</span>
+                                </div>
+                                <div class="w-full bg-secondary-200 rounded-full h-2">
+                                    <div class="bg-success h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bias Detection -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium text-secondary-700">Bias Detection</span>
+                                    <span class="font-bold text-warning">Moderate</span>
+                                </div>
+                                <div class="w-full bg-secondary-200 rounded-full h-2">
+                                    <div class="bg-warning h-2 rounded-full" style="width: 65%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emotional Tone -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium text-secondary-700">Emotional Tone</span>
+                                    <span class="font-bold text-primary-500">Neutral</span>
+                                </div>
+                                <div class="w-full bg-secondary-200 rounded-full h-2">
+                                    <div class="bg-primary-500 h-2 rounded-full" style="width: 50%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Suspicious Patterns -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium text-secondary-700">Suspicious Patterns</span>
+                                    <span class="font-bold text-danger">Low</span>
+                                </div>
+                                <div class="w-full bg-secondary-200 rounded-full h-2">
+                                    <div class="bg-danger h-2 rounded-full" style="width: 25%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Community Verification -->
+                    <div class="bg-secondary-50 rounded-2xl p-8">
+                        <h4 class="text-xl font-semibold text-secondary-900 mb-6 flex items-center">
+                            <i class="fas fa-users text-primary-500 mr-3"></i>
+                            Community Verification
+                        </h4>
+                        
+                        <div class="space-y-6">
+                            <!-- Community Votes -->
+                            <div class="text-center">
+                                <div class="flex justify-center space-x-8 mb-4">
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-success">72%</div>
+                                        <div class="text-secondary-600 text-sm">Trust</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="text-2xl font-bold text-danger">28%</div>
+                                        <div class="text-secondary-600 text-sm">Distrust</div>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-secondary-200 rounded-full h-2">
+                                    <div class="bg-success h-2 rounded-full" style="width: 72%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Verifier Consensus -->
+                            <div>
+                                <h5 class="font-medium text-secondary-700 mb-3">Top Verifier Consensus</h5>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <img src="https://picsum.photos/32?random=1" alt="Trusted verifier" class="w-8 h-8 rounded-full mr-3">
+                                            <span class="text-secondary-700">VerifiedExpert</span>
+                                        </div>
+                                        <span class="text-success font-medium">Trusted</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <img src="https://picsum.photos/32?random=2" alt="Trusted verifier" class="w-8 h-8 rounded-full mr-3">
+                                            <span class="text-secondary-700">FactCheckerPro</span>
+                                        </div>
+                                        <span class="text-success font-medium">Trusted</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Final Trust Score -->
+                <div class="mt-8 text-center">
+                    <div class="trust-score-gradient rounded-2xl p-8 text-white">
+                        <h4 class="text-xl font-semibold mb-4">Final Trust Score</h4>
+                        <div class="flex items-center justify-center space-x-4">
+                            <div class="relative w-32 h-32">
+                                <svg class="w-32 h-32 progress-ring">
+                                    <circle
+                                        class="progress-ring-circle"
+                                        stroke="rgba(255,255,255,0.3)"
+                                        stroke-width="8"
+                                        fill="transparent"
+                                        r="56"
+                                        cx="64"
+                                        cy="64"
+                                    />
+                                    <circle
+                                        class="progress-ring-circle"
+                                        stroke="white"
+                                        stroke-width="8"
+                                        fill="transparent"
+                                        r="56"
+                                        cx="64"
+                                        cy="64"
+                                        stroke-dasharray="351.858"
+                                        stroke-dashoffset="52.778"
+                                    />
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-3xl font-bold">85%</span>
+                                </div>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-lg mb-2">This content appears to be</p>
+                                <p class="text-2xl font-bold">Mostly Trustworthy</p>
+                                <p class="text-sm opacity-90">Based on AI analysis and community consensus</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Misinformation -->
+    <section id="trending" class="py-20 bg-secondary-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+                    Trending Misinformation
+                </h2>
+                <p class="text-secondary-600 text-lg max-w-2xl mx-auto">
+                    Stay informed about currently circulating false claims and debunked content
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Trending Item 1 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-danger text-white px-3 py-1 rounded-full text-sm font-medium">False</span>
+                        <span class="text-secondary-500 text-sm">2.4k reports</span>
+                    </div>
+                    <h3 class="font-semibold text-secondary-900 mb-3">Viral Health Claim Debunked</h3>
+                    <p class="text-secondary-600 text-sm mb-4">Misleading information about medical treatments circulating on social media</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-secondary-500 text-sm">Updated 2 hours ago</span>
+                        <button class="text-primary-500 hover:text-primary-600 font-medium text-sm">View Details</button>
+                    </div>
+                </div>
+                
+                <!-- Trending Item 2 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-warning text-white px-3 py-1 rounded-full text-sm font-medium">Misleading</span>
+                        <span class="text-secondary-500 text-sm">1.8k reports</span>
+                    </div>
+                    <h3 class="font-semibold text-secondary-900 mb-3">Edited Political Video</h3>
+                    <p class="text-secondary-600 text-sm mb-4">Out-of-context video clip gaining traction across platforms</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-secondary-500 text-sm">Updated 5 hours ago</span>
+                        <button class="text-primary-500 hover:text-primary-600 font-medium text-sm">View Details</button>
+                    </div>
+                </div>
+                
+                <!-- Trending Item 3 -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-danger text-white px-3 py-1 rounded-full text-sm font-medium">Fabricated</span>
+                        <span class="text-secondary-500 text-sm">3.1k reports</span>
+                    </div>
+                    <h3 class="font-semibold text-secondary-900 mb-3">Fake Celebrity Endorsement</h3>
+                    <p class="text-secondary-600 text-sm mb-4">AI-generated celebrity promotion for fraudulent products</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-secondary-500 text-sm">Updated 1 hour ago</span>
+                        <button class="text-primary-500 hover:text-primary-600 font-medium text-sm">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Fact-Checking -->
+    <section id="community" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 mb-4">
+                    Community Fact-Checking
+                </h2>
+                <p class="text-secondary-600 text-lg max-w-2xl mx-auto">
+                    Join our decentralized network of truth-seekers and contribute to collective verification
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Become a Verifier -->
+                    <div class="bg-primary-50 rounded-2xl p-8">
+                        <div class="w-16 h-16 bg-primary-500 rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-user-check text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-secondary-900 mb-4">Become a Verifier</h3>
+                        <p class="text-secondary-600 mb-6">Join our community of trusted fact-checkers and help combat misinformation</p>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-success mr-3"></i>
+                                <span class="text-secondary-700">Earn reputation points</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-success mr-3"></i>
+                                <span class="text-secondary-700">Access advanced tools</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check text-success mr-3"></i>
+                                <span class="text-secondary-700">Join expert discussions</span>
+                            </li>
+                        </ul>
+                        <button class="w-full bg-primary-500 text-white py-3 rounded-lg hover:bg-primary-600 transition-colors font-semibold">
+                            Join Community
+                        </button>
+                    </div>
+                    
+                    <!-- Recent Verifications -->
+                    <div class="bg-secondary-50 rounded-2xl p-8">
+                        <h3 class="text-2xl font-bold text-secondary-900 mb-6">Recent Community Verifications</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                                <div>
+                                    <p class="font-medium text-secondary-900">Climate Change Article</p>
+                                    <p class="text-secondary-500 text-sm">Verified by 42 members</p>
+                                </div>
+                                <span class="bg-success text-white px-3 py-1 rounded-full text-sm font-medium">Trusted</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                                <div>
+                                    <p class="font-medium text-secondary-900">Economic Forecast</p>
+                                    <p class="text-secondary-500 text-sm">Verified by 28 members</p>
+                                </div>
+                                <span class="bg-warning text-white px-3 py-1 rounded-full text-sm font-medium">Mixed</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-white rounded-lg">
+                                <div>
+                                    <p class="font-medium text-secondary-900">Health Product Claim</p>
+                                    <p class="text-secondary-500 text-sm">Verified by 67 members</p>
+                                </div>
+                                <span class="bg-danger text-white px-3 py-1 rounded-full text-sm font-medium">False</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard -->
+    <section id="leaderboard" class="py-20 bg-gradient-to-br from-primary-900 to-secondary-900 text-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    Trusted Verifiers Leaderboard
+                </h2>
+                <p class="text-primary-100 text-lg max-w-2xl mx-auto">
+                    Recognizing our most accurate and active community fact-checkers
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white/10 rounded-2xl p-8 backdrop-blur-sm">
+                    <div class="space-y-4">
+                        <!-- Top Verifier -->
+                        <div class="flex items-center justify-between p-6 bg-white/20 rounded-xl">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mr-4">
+                                    <i class="fas fa-crown text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-lg">VerifiedExpert</p>
+                                    <p class="text-primary-200 text-sm">Expert Fact-Checker</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold">98.7%</p>
+                                <p class="text-primary-200 text-sm">Accuracy Score</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Second Place -->
+                        <div class="flex items-center justify-between p-6 bg-white/10 rounded-xl">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center mr-4">
+                                    <span class="text-white font-bold">2</span>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">FactCheckerPro</p>
+                                    <p class="text-primary-200 text-sm">Senior Verifier</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-bold">96.2%</p>
+                                <p class="text-primary-200 text-sm">Accuracy Score</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Third Place -->
+                        <div class="flex items-center justify-between p-6 bg-white/10 rounded-xl">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center mr-4">
+                                    <span class="text-white font-bold">3</span>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">TruthSeeker42</p>
+                                    <p class="text-primary-200 text-sm">Community Leader</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-bold">94.8%</p>
+                                <p class="text-primary-200 text-sm">Accuracy Score</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <button class="bg-white text-primary-600 px-6 py-3 rounded-lg hover:bg-primary-50 transition-colors font-semibold">
+                            View Full Leaderboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-secondary-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-white text-sm"></i>
+                        </div>
+                        <span class="text-xl font-bold">TruthLine</span>
+                    </div>
+                    <p class="text-secondary-300 text-sm">
+                        Decentralized news verification for a more informed world.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Platform</h4>
+                    <ul class="space-y-2 text-secondary-300 text-sm">
+                        <li><a href="#verify" class="hover:text-white transition-colors">Verify Content</a></li>
+                        <li><a href="#trending" class="hover:text-white transition-colors">Trending Misinformation</a></li>
+                        <li><a href="#community" class="hover:text-white transition-colors">Community</a></li>
+                        <li><a href="#leaderboard" class="hover:text-white transition-colors">Leaderboard</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-secondary-300 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Fact-Checking Guide</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">API Documentation</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Research Papers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="w-10 h-10 bg-secondary-700 rounded-full flex items-center justify-center hover:bg-primary-500 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-secondary-700 rounded-full flex items-center justify-center hover:bg-primary-500 transition-colors">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-secondary-700 rounded-full flex items-center justify-center hover:bg-primary-500 transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                    <p class="text-secondary-300 text-sm">
+                        Contact: hello@truthline.org
+                    </p>
+                </div>
+            </div>
+            
+            <div class="border-t border-secondary-700 mt-8 pt-8 text-center text-secondary-400 text-sm">
+                <p>&copy; 2024 TruthLine. All rights reserved. Building a more truthful digital ecosystem.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Define navigation items
+        const navigationItems = [
+            { "id": 1, "label": "Home", "href": "#home" },
+            { "id": 2, "label": "Verify", "href": "#verify" },
+            { "id": 3, "label": "Trending", "href": "#trending" },
+            { "id": 4, "label": "Community", "href": "#community" },
+            { "id": 5, "label": "Leaderboard", "href": "#leaderboard" }
+        ];
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // File upload functionality
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            const dropZone = input.previousElementSibling;
+            
+            dropZone.addEventListener('click', () => {
+                input.click();
+            });
+            
+            input.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    dropZone.innerHTML = `
+                        <i class="fas fa-check text-success text-2xl mb-2"></i>
+                        <p class="text-secondary-600">File selected: ${e.target.files[0].name}</p>
+                    `;
+                }
+            });
+            
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropZone.classList.add('border-primary-500', 'bg-primary-50');
+            }
+            
+            function unhighlight() {
+                dropZone.classList.remove('border-primary-500', 'bg-primary-50');
+            }
+            
+            dropZone.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                input.files = files;
+                
+                if (files.length > 0) {
+                    dropZone.innerHTML = `
+                        <i class="fas fa-check text-success text-2xl mb-2"></i>
+                        <p class="text-secondary-600">File selected: ${files[0].name}</p>
+                    `;
+                }
+            }
+        });
+
+        // Trust score animation
+        function animateTrustScore() {
+            const circle = document.querySelector('.progress-ring-circle:last-child');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = circumference;
+            
+            const offset = circumference - (85 / 100) * circumference;
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 500);
+        }
+
+        // Initialize animations when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            animateTrustScore();
+        });
+    </script>
+</body>
+</html>
